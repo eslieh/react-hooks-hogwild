@@ -140,7 +140,9 @@ ul {
   clear: both;
 }
 
-
+.ui.eight.wide.column img {
+  width: 100%;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
