@@ -140,8 +140,11 @@ ul {
   clear: both;
 }
 
-.ui.eight.wide.column img {
+.content img {
   width: 100%;
+}
+.container {
+  margin-top: 12px;
 }
 @keyframes App-logo-spin {
   from {

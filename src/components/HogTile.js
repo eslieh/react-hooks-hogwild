@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { Card } from 'semantic-ui-react';
 const HogTile = ({ hog, hideHog }) => {
     const { name, specialty, weight, greased, "highest medal achieved": medal, image } = hog;
     const [isDescriptionVisible, setIsDescriptionVisible] = useState(false); // Track visibility
@@ -9,10 +9,10 @@ const HogTile = ({ hog, hideHog }) => {
     };
 
     return (
-        <div className="ui card" onClick={toggleDescription} style={{ cursor: 'pointer' }}> {/* Click to toggle */}
-            <div className="content">
+        <Card className="ui card" onClick={toggleDescription} style={{ cursor: 'pointer' }}> {/* Click to toggle */}
+            <Card.Content>
                 <img src={image} alt={name} />
-                <h3>{name}</h3>
+                <Card.Header>{name}</Card.Header>
                 {isDescriptionVisible && ( // Conditionally render description
                     <div className='description'>
                         <p>Specialty: {specialty}</p>
@@ -22,8 +22,8 @@ const HogTile = ({ hog, hideHog }) => {
                         <button className='Hider' onClick={(e) => { e.stopPropagation(); hideHog(name); }}>Hide</button>
                     </div>
                 )}
-            </div>
-        </div>
+            </Card.Content>
+        </Card>
     );
 };
 

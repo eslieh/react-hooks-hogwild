@@ -1,31 +1,25 @@
 import React, { useState } from "react";
 import Nav from "./Nav";
-import HogTile from "./HogTile";
-import FilterSort from "./FilterSort";
-import AddHogForm from "./AddHogForm";
-import hogsData from "../porkers_data";
+import HogTile from "./HogTile"; // Import HogTile component
+import FilterSort from "./FilterSort"; // Import FilterSort component
+import AddHogForm from "./AddHogForm"; // Import AddHogForm component
+import hogsData from "../porkers_data"; // Import hog data
 
 function App() {
-    const [hogs, setHogs] = useState(hogsData);
-    const [isGreasedOnly, setIsGreasedOnly] = useState(false);
-    const [sortOption, setSortOption] = useState('');
-    const [hiddenHogs, setHiddenHogs] = useState(new Set()); // Set to track hidden hogs by name
+    const [hogs, setHogs] = useState(hogsData); // State for hogs
+    const [greased, setGreased] = useState(false); // State for greased filter
+    const [sortBy, setSortBy] = useState(""); // State for sorting
+    const [hiddenHogs, setHiddenHogs] = useState(new Set()); // State for hidden hogs
 
-    const filteredHogs = hogs.filter(hog => {
-        if (isGreasedOnly && !hog.greased) {
-            return false;
-        }
-        return !hiddenHogs.has(hog.name); // Exclude hidden hogs
-    });
+    // Function to filter greased hogs
+    const toggleGreased = () => {
+        setGreased((prev) => !prev);
+    };
 
-    const sortedHogs = [...filteredHogs].sort((a, b) => {
-        if (sortOption === 'name') {
-            return a.name.localeCompare(b.name);
-        } else if (sortOption === 'weight') {
-            return a.weight - b.weight;
-        }
-        return 0;
-    });
+    // Function to sort hogs
+    const handleSortChange = (sortOption) => {
+        setSortBy(sortOption);
+    };
 
     // Function to add a new hog
     const addHog = (newHog) => {
@@ -37,19 +31,28 @@ function App() {
         setHiddenHogs((prevHiddenHogs) => new Set(prevHiddenHogs).add(hogName));
     };
 
+    // Filter and sort hogs based on state, excluding hidden hogs
+    const filteredHogs = hogs
+        .filter((hog) => (greased ? hog.greased : true))
+        .filter((hog) => !hiddenHogs.has(hog.name)) // Exclude hidden hogs
+        .sort((a, b) => {
+            if (sortBy === "name") return a.name.localeCompare(b.name);
+            if (sortBy === "weight") return a.weight - b.weight;
+            return 0;
+        });
+
     return (
         <div className="App">
             <Nav />
-            <AddHogForm addHog={addHog} />
             <FilterSort 
-                setGreased={setIsGreasedOnly}
-                setSortOption={setSortOption}
+                greased={greased}
+                toggleGreased={toggleGreased}
+                handleSortChange={handleSortChange}
             />
+            <AddHogForm addHog={addHog} />
             <div className="ui grid container">
-                {sortedHogs.map((hog) => (
-                    <div className="ui eight wide column" key={hog.name}>
-                        <HogTile hog={hog} hideHog={hideHog} />
-                    </div>
+                {filteredHogs.map((hog) => (
+                    <HogTile key={hog.name} hog={hog} hideHog={hideHog} />
                 ))}
             </div>
         </div>
